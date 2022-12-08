@@ -1,6 +1,6 @@
 FROM	alpine:latest
-COPY	official_nginx_signature	/tmp
-RUN		apk add --no-cache openssl curl ca-certificates \
+COPY	tools/official_nginx_signature	/tmp
+RUN		apk add --no-cache --virtual install_deps openssl curl ca-certificates \
 		&& printf "%s%s%s%s\n" \
 			"@nginx " \
 			"http://nginx.org/packages/alpine/v" \
@@ -13,6 +13,9 @@ RUN		apk add --no-cache openssl curl ca-certificates \
 		&& rm -f /tmp/nginx_signature_out && rm -f /tmp/nginx_signature_out \
 		&& mv /tmp/nginx_signing.rsa.pub /etc/apk/keys/ \
 		&& apk add nginx@nginx
-# RUN		echo "ssl_protocols TLSv1.2 TLSv1.3;" >> /etc/nginx/nginx.conf
+RUN		apk del install_deps
+COPY	conf/* /etc/nginx/
 
-CMD ["nginx", "-g", "daemon off;", "-g", "ssl_protocols TLSv1.2 TLSv1.3;"]
+CMD		["nginx", "-g", "daemon off;"]
+
+EXPOSE	443
