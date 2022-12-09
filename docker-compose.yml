@@ -1,0 +1,19 @@
+services:
+  nginx:
+    build: ./nginx_image
+    ports:
+        - "443:443"
+    volumes:
+        - static_files:/usr/share/nginx/html
+    links:
+        - "php:php"
+    depends_on:
+        - php
+
+  php:
+    build: ./php_image
+    volumes:
+        - static_files:/usr/share/wordpress
+
+volumes:
+    static_files: {}

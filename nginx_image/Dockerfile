@@ -16,6 +16,7 @@ RUN			apk add --no-cache --virtual install_deps openssl curl ca-certificates \
 RUN			apk del install_deps
 COPY		conf/* /etc/nginx/
 
-ENTRYPOINT	["nginx", "-g", "daemon off;"]
+ENTRYPOINT	["nginx"]
+# ENTRYPOINT	["nginx", "-g", "daemon off;"]
 
 EXPOSE	443
