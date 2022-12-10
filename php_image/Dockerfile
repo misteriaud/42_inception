@@ -1,5 +1,5 @@
 FROM		alpine:3.16.3
-RUN			apk add php php-fpm
+RUN			apk add php php-fpm php-mysqli
 # INSTALL WORDPRESS
 RUN			cd /usr/share \
 			&& wget http://wordpress.org/latest.tar.gz \
