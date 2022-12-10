@@ -1,8 +1,7 @@
 FROM		alpine:3.16.3
 RUN			apk add php php-fpm
 # INSTALL WORDPRESS
-RUN			mkdir /usr/share/wordpress \
-			&& cd /usr/share/wordpress \
+RUN			cd /usr/share \
 			&& wget http://wordpress.org/latest.tar.gz \
 			&& tar -xzvf latest.tar.gz \
 			&& rm latest.tar.gz

@@ -4,7 +4,7 @@ services:
     ports:
         - "443:443"
     volumes:
-        - static_files:/usr/share/nginx/html
+        - static_files:/usr/share
     links:
         - "php:php"
     depends_on:
@@ -13,7 +13,7 @@ services:
   php:
     build: ./php_image
     volumes:
-        - static_files:/usr/share/wordpress
+        - static_files:/usr/share
 
 volumes:
     static_files: {}
