@@ -4,7 +4,7 @@ services:
     ports:
         - "443:443"
     volumes:
-        - static_files:/usr/share
+        - wordpress_static:/usr/share
     links:
         - "php:php"
     depends_on:
@@ -13,7 +13,17 @@ services:
   php:
     build: ./php_image
     volumes:
-        - static_files:/usr/share
+        - wordpress_static:/usr/share
+    links:
+        - "mariadb:mariadb"
+    depends_on:
+        - mariadb
+
+  mariadb:
+    build: ./mariadb_image
+    volumes:
+        - wordpress_db:/var/lib/mysql
 
 volumes:
-    static_files: {}
+    wordpress_static: {}
+    wordpress_db: {}
