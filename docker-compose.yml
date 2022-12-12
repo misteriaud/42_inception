@@ -20,7 +20,13 @@ services:
         - mariadb
 
   mariadb:
-    build: ./mariadb_image
+    build:
+        context: mariadb_image
+        args:
+            - DB_ROOT_USERPASS=${DB_ROOT_USERPASS}
+            - DB_WORDPRESS_NAME=${DB_WORDPRESS_NAME}
+            - DB_WORDPRESS_USERNAME=${DB_WORDPRESS_USERNAME}
+            - DB_WORDPRESS_USERPASS=${DB_WORDPRESS_USERPASS}
     volumes:
         - wordpress_db:/var/lib/mysql
 
