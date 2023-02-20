@@ -20,4 +20,4 @@ RUN			sh mariadb_secure_install.sh
 
 USER		mysql
 ENTRYPOINT	["mariadbd-safe"]
-EXPOSE 		3306
+# EXPOSE 		3306

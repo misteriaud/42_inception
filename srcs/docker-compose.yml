@@ -1,35 +1,36 @@
 services:
   nginx:
+    volumes:
+        - ${HOME}/data/wordpress_static:/usr/share
     build: ./nginx_image
     ports:
         - "443:443"
-    volumes:
-        - wordpress_static:/usr/share
-    links:
-        - "php:php"
     depends_on:
         - php
+    networks:
+      - 42net
 
   php:
-    build: ./php_image
     volumes:
-        - wordpress_static:/usr/share
-    links:
-        - "mariadb:mariadb"
+        - ${HOME}/data/wordpress_static:/usr/share
+    build: ./php_image
     depends_on:
         - mariadb
+    networks:
+      - 42net
 
   mariadb:
+    volumes:
+        - ${HOME}/data/wordpress_db:/var/lib/mysql
     build:
-        context: mariadb_image
+        context: ./mariadb_image
         args:
             - DB_ROOT_USERPASS=${DB_ROOT_USERPASS}
             - DB_WORDPRESS_NAME=${DB_WORDPRESS_NAME}
             - DB_WORDPRESS_USERNAME=${DB_WORDPRESS_USERNAME}
             - DB_WORDPRESS_USERPASS=${DB_WORDPRESS_USERPASS}
-    volumes:
-        - wordpress_db:/var/lib/mysql
+    networks:
+      - 42net
 
-volumes:
-    wordpress_static: {}
-    wordpress_db: {}
+networks:
+    42net:
