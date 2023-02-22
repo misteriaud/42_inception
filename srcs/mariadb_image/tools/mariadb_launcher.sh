@@ -2,7 +2,11 @@
 
 if [ ! -d "/var/lib/mysql/wordpress" ]; then
 
-        cat << EOF > /tmp/create_db.sql
+	chown -R mysql:mysql /var/lib/mysql;
+	chgrp -R mysql /var/lib/mysql;
+	mysql_install_db --user=mysql --ldata=/var/lib/mysql;
+
+	cat << EOF > /tmp/create_db.sql
 USE mysql;
 FLUSH PRIVILEGES;
 
@@ -20,7 +24,9 @@ GRANT ALL PRIVILEGES ON ${DB_WORDPRESS_NAME}.* TO '${DB_WORDPRESS_USERNAME}'@'%'
 FLUSH PRIVILEGES;
 EOF
 
-        # run init.sql
-        /usr/bin/mysqld --user=mysql --bootstrap < /tmp/create_db.sql
-        rm -f /tmp/create_db.sql
+	# run init.sql
+	/usr/bin/mysqld --user=mysql --bootstrap < /tmp/create_db.sql
+	rm -f /tmp/create_db.sql
 fi
+
+exec mariadbd-safe --user=mysql

@@ -1,8 +1,8 @@
 services:
   nginx:
-    volumes:
-        - ${HOME}/data/wordpress_static:/usr/share
     build: ./nginx_image
+    volumes:
+        - wordpress_static:/usr/share
     ports:
         - "443:443"
     depends_on:
@@ -11,17 +11,15 @@ services:
       - 42net
 
   php:
-    volumes:
-        - ${HOME}/data/wordpress_static:/usr/share
     build: ./php_image
+    volumes:
+        - wordpress_static:/usr/share
     depends_on:
         - mariadb
     networks:
       - 42net
 
   mariadb:
-    volumes:
-        - ${HOME}/data/wordpress_db:/var/lib/mysql
     build:
         context: ./mariadb_image
         args:
@@ -29,8 +27,24 @@ services:
             - DB_WORDPRESS_NAME=${DB_WORDPRESS_NAME}
             - DB_WORDPRESS_USERNAME=${DB_WORDPRESS_USERNAME}
             - DB_WORDPRESS_USERPASS=${DB_WORDPRESS_USERPASS}
+    volumes:
+        - wordpress_db:/var/lib/mysql
     networks:
       - 42net
+
+volumes:
+  wordpress_static:
+    driver: local
+    driver_opts:
+      type: ext4
+      device: "/home/maxime/data/wordpress_static"
+      o: bind
+  wordpress_db:
+    driver: local
+    driver_opts:
+      type: ext4
+      device: "/home/maxime/data/wordpress_db"
+      o: bind
 
 networks:
     42net:

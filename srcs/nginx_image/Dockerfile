@@ -1,4 +1,4 @@
-FROM		alpine:latest
+FROM		alpine:3.17.2
 COPY		tools/official_nginx_signature	/tmp
 RUN			apk add --no-cache --virtual install_deps openssl curl ca-certificates \
 			&& printf "%s%s%s%s\n" \
