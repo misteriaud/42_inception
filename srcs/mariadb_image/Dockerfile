@@ -1,9 +1,9 @@
 FROM		alpine:3.16.3
 
-ARG			DB_ROOT_USERPASS=default_rootpass \
-			DB_WORDPRESS_NAME=wordpress \
-			DB_WORDPRESS_USERNAME=wpuser \
-			DB_WORDPRESS_USERPASS=wppass
+ARG			DB_ROOT_USERPASS \
+			DB_WORDPRESS_NAME \
+			DB_WORDPRESS_USERNAME \
+			DB_WORDPRESS_USERPASS
 
 ENV			DB_ROOT_USERPASS=${DB_ROOT_USERPASS} \
 			DB_WORDPRESS_NAME=${DB_WORDPRESS_NAME} \
@@ -19,5 +19,5 @@ COPY		tools/mariadb_launcher.sh .
 # RUN			sh mariadb_secure_install.sh
 
 # USER		mysql
-ENTRYPOINT	["sh", "mariadbd_launcher.sh"]
+ENTRYPOINT	["sh", "mariadb_launcher.sh"]
 # EXPOSE 		3306

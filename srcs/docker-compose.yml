@@ -1,50 +1,77 @@
 services:
   nginx:
-    build: ./nginx_image
+    build:
+      context: ./nginx_image
+      args:
+        - DOMAIN_NAME=${DOMAIN_NAME}
     volumes:
-        - wordpress_static:/usr/share
+      - wordpress_volume:/usr/share
     ports:
-        - "443:443"
+      - "443:443"
     depends_on:
-        - php
+      - php
     networks:
       - 42net
 
+
   php:
-    build: ./php_image
+    build:
+      context: ./php_image
+      args:
+        - DB_ROOT_USERPASS=${DB_ROOT_USERPASS}
+        - DB_WORDPRESS_NAME=${DB_WORDPRESS_NAME}
+        - DB_WORDPRESS_USERNAME=${DB_WORDPRESS_USERNAME}
+        - DB_WORDPRESS_USERPASS=${DB_WORDPRESS_USERPASS}
+        - DOMAIN_NAME=${DOMAIN_NAME}
+        - WP_TITLE=${WP_TITLE}
+        - WP_ADMIN_NAME=${WP_ADMIN_NAME}
+        - WP_ADMIN_PASS=${WP_ADMIN_PASS}
+        - WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL}
+        - WP_USER_NAME=${WP_USER_NAME}
+        - WP_USER_PASS=${WP_USER_PASS}
+        - WP_USER_EMAIL=${WP_USER_EMAIL}
     volumes:
-        - wordpress_static:/usr/share
+      - wordpress_volume:/usr/share
     depends_on:
-        - mariadb
+      mariadb:
+        condition: service_healthy
     networks:
       - 42net
 
   mariadb:
     build:
-        context: ./mariadb_image
-        args:
-            - DB_ROOT_USERPASS=${DB_ROOT_USERPASS}
-            - DB_WORDPRESS_NAME=${DB_WORDPRESS_NAME}
-            - DB_WORDPRESS_USERNAME=${DB_WORDPRESS_USERNAME}
-            - DB_WORDPRESS_USERPASS=${DB_WORDPRESS_USERPASS}
+      context: ./mariadb_image
+      args:
+        - DB_ROOT_USERPASS=${DB_ROOT_USERPASS}
+        - DB_WORDPRESS_NAME=${DB_WORDPRESS_NAME}
+        - DB_WORDPRESS_USERNAME=${DB_WORDPRESS_USERNAME}
+        - DB_WORDPRESS_USERPASS=${DB_WORDPRESS_USERPASS}
     volumes:
-        - wordpress_db:/var/lib/mysql
+      - mariadb_volume:/var/lib/mysql
     networks:
       - 42net
+    healthcheck:
+      test: ["CMD-SHELL", "mysqlcheck -u root --password=$${DB_ROOT_USERPASS} -A"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+
+
 
 volumes:
-  wordpress_static:
+  wordpress_volume:
     driver: local
     driver_opts:
-      type: ext4
-      device: "/home/maxime/data/wordpress_static"
-      o: bind
-  wordpress_db:
+      type: 'none'
+      o: 'bind'
+      device: '/home/maxime/data/wordpress_static'
+  mariadb_volume:
     driver: local
     driver_opts:
-      type: ext4
-      device: "/home/maxime/data/wordpress_db"
-      o: bind
+      type: 'none'
+      o: 'bind'
+      device: '/home/maxime/data/wordpress_db'
 
 networks:
     42net:
