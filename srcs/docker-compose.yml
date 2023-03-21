@@ -65,13 +65,13 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '$${HOME}/data/wordpress_static'
+      device: '/home/mriaud/data/wordpress_static'
   mariadb_volume:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '$${HOME}/data/wordpress_db'
+      device: '/home/mriaud/data/wordpress_db'
 
 networks:
     42net:
