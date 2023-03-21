@@ -1,6 +1,9 @@
 #!/bin/sh
+set -e
 
 if [ ! -d "/var/lib/mysql/wordpress" ]; then
+
+	echo "init database"
 
 	chown -R mysql:mysql /var/lib/mysql;
 	chgrp -R mysql /var/lib/mysql;

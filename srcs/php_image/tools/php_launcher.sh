@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 echo "php_launcher running";
 ls /usr/local/bin/wp;
