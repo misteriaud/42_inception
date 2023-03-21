@@ -15,10 +15,10 @@ $(DATA_DIR):
 
 clean:
 	- docker system prune --all
-	- docker rm $(docker ps -qa)
-	- docker rmi -f $(docker images -qa)
-	- docker volume rm $(docker volume ls -q)
-	- docker network rm $(docker network ls -q)
+	- docker rm $(shell docker ps -qa)
+	- docker rmi -f $(shell docker images -qa)
+	- docker volume rm $(shell docker volume ls -q)
+	- docker network rm $(shell docker network ls -q)
 
 fclean: down clean
 	sudo rm -rf $(DATA_DIR)
